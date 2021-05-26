@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maor's Test</title>
+</head>
+
+<body>
+    <!-- Add Object -->
+    <h1>Name:</h1><input id="_name"><br>
+    <h1>Age:</h1><input id="_age" type="number"><br>
+    <h1>Color:</h1><input id="_color"><br>
+    <p id="Colors"></p>
+    <button onclick="addToAr()">Add</button>
+
+    <!-- Show All -->
+    <br><br>
+    <button onclick="showAllAr()">Show All</button>
+    <div id="displayAr"></div>
+
+
+
+    <!-- Remove Object -->
+    <h1>ID:</h1><input id="_id" type="number">
+    <button onclick="removeFromAr(idIn.value)">Remove</button>
+    <div id="removeObj"></div>
+    <br>
+
+    <!-- Search -->
+    <h1>Search (By id):</h1><input id="Search" type="number"><button onclick="searchObj(searchIn.value)">Search</button>
+    <br>
+    <button onclick="availableID()">IDs</button>
+    <div id="avaID"></div>
+    <div id="searchRes"></div>
+
+    <script>
+
+        //variants for easier writing
+        var nameIn = document.getElementById("_name")
+        var ageIn = document.getElementById("_age")
+        var colorIn = document.getElementById("_color")
+        var idIn = document.getElementById("_id")
+        var searchIn = document.getElementById("Search")
+        //JSON array
+        var testAr = [
+            { "id": 1, "name": "Maor", "age": "22", "color": "blue" },
+            { "id": 2, "name": "Nadav", "age": "24", "color": "Red" },
+            { "id": 3, "name": "Shay", "age": "14", "color": "Green" }
+        ]
+        //Color list to choose colors from
+        var colorList = ["white", "black", "orange", "purple", "brown", "red", "green", "blue", "yellow", "pink", "aquamarine"]
+        function listColors() {
+            Colors.innerHTML = `<h4 style="font-family:arial">Colors to choose from: ${colorList.join(', ')}</h5>`
+        }
+        listColors()
+        //Adding an object to the array
+        function addToAr() {
+            if (colorList.includes(colorIn.value.toLowerCase()) == false) {
+                alert(`color can only be one of the following: ${colorList}`)
+                return;
+            }
+            let objString = `{"id": ${testAr.length + 1} , "name" : "${nameIn.value}" , "age" : "${ageIn.value}" , "color" : "${colorIn.value}" }`
+            console.log(objString)
+            JSON.parse(objString)
+            testAr.splice(testAr.length, 0, JSON.parse(objString))
+            console.log(testAr)
+        }
+        // removing an object from the array
+        function confirmDel(value, n1) {
+            if (value == 'Confirm') {
+                testAr.splice(n1, 1)
+            }
+            if (value == 'Cancel') {
+                removeObj.innerHTML = "you have chosen not to delete the object"
+            }
+        }
+        function removeFromAr(_id) {
+            if (_id == 0) {
+                alert(`must insert a number between 1 and ${testAr.length}`)
+                return;
+            }
+            if (_id > testAr.length | _id < 1) {
+                alert(`you can only choose an id between 1 to ${testAr.length}`)
+                return;
+            }
+            if (testAr.length == 0) {
+                alert("The array is empty, cannot remove any more objects")
+                return;
+            }
+            else if (_id >= 1 | _id < testAr.length) {
+                _id--;
+                removeObj.innerHTML = `This is the Object you wish to remove: ID - ${testAr[_id].id}, Name - ${testAr[_id].name}, Age - ${testAr[_id].age}, Color - ${testAr[_id].color}
+                <br>
+                <button onclick="confirmDel(this.innerText, ${_id})">Confirm</button> <button onclick="confirmDel(this.innerText)">Cancel</button>`
+            }
+        }
+        // show all objects in array
+        function showAllAr() {
+            document.getElementById('displayAr').innerHTML = ''
+            for (let i = 0; i < testAr.length; i++) {
+                document.getElementById('displayAr').innerHTML += `<p style="color:${testAr[i].color}">ID:${testAr[i].id} Name: ${testAr[i].name} Age: ${testAr[i].age} Color:${testAr[i].color} </p>`
+            }
+        }
+        //Search Object in Array
+        function searchObj(find) {
+            if (find > testAr.length | find < 1) {
+                alert(`you can only choose an id between 1 to ${testAr.length}`)
+                return;
+            }
+            searchRes.innerHTML = `<p style="color:${testAr[find - 1].color}; text-weight:bolds"> This is the Object you were looking for: ID - ${testAr[find - 1].id},Name - ${testAr[find - 1].name},Age - ${testAr[find - 1].age},Color - ${testAr[find - 1].color}, </p>`
+        }
+        //Shows available IDs
+        function availableID() {
+            if (testAr.length == 0) {
+                avaID.innerHTML = `All objects have been removed, no more available IDs`
+                return;
+            }
+            avaID.innerHTML = `Available IDs are 1 to ${testAr.length}`
+        }
+    </script>
+</body>
+
+</html>
